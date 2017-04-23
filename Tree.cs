@@ -121,67 +121,110 @@ namespace AVLTree
             if(bf == 2 && BalanceFactor(1 + Height(node.left.left), 1 + Height(node.left.right)) == -1)
             {
                 Console.WriteLine("node.left RotateLeft, RotateRight on {0}", node.data);
-                LeftRotation(node.left.left);
-                RightRotation(node.right);
+                LeftRotation(node.left);
+                RightRotation(node);
             }
             else if(bf == -2 && BalanceFactor(1 + Height(node.right.left), 1 + Height(node.right.right)) == 1)
             {
                 Console.WriteLine("node.right RotateRight, RotateLeft on {0}", node.data);
-
+                RightRotation(node.right);
+                LeftRotation(node);
             }
             else if(bf == -2 && BalanceFactor(1 + Height(node.right.left), 1 + Height(node.right.right)) == -1)
             {
                 Console.WriteLine("Rotate Left on {0}", node.data);
-                LeftRotation(node.right);
+                LeftRotation(node);
             }
             else if(bf == 2 && BalanceFactor(1 + Height(node.left.left), 1 + Height(node.left.right)) == 1)
             {
                 Console.WriteLine("Rotate Right on {0}", node.data);
-                RightRotation(node.left);
+                RightRotation(node);
             }
         }
 
 		//Done
         public void LeftRotation(Node node)
         {
-            if(node.parent == root)
+            if(node == root)
             {
-                node.parent.right = node.left;
-                node.left = root;
-                node.left.parent = node;
-                root = node;
+                Node temp = node.right;
+
+                node.right = temp.left;
+                temp.left = node;
+                node.parent = temp;
+                root = temp;
                 root.parent = null;
             }
             else
             {
-                node.parent.right = node.left;
-                node.left = node.parent;
-                node.parent = node.left.parent;
-                node.left.parent.right = node;
-                node.left.parent = node;
-                node.left.right.parent = node.left;
+                Node temp = node.right;
+                
+                if(temp.left != null) 
+                {
+                    node.right = temp.left;
+                    node.right.parent = node;
+                }
+                else
+                {
+                    node.right = null;
+                }
+
+                temp.left = node;
+                temp.parent = node.parent;
+
+                if(node == node.parent.left)
+                {
+                    temp.parent.left = temp;
+                }
+                else
+                {
+                    temp.parent.right = temp;
+                }
+
+                node.parent = temp;
             }
         }
 		
 		//In development.
         public void RightRotation(Node node)
         {
-            if (node.parent == root)
+            if (node == root)
             {
-                node.parent.left = node.right;
-                node.right = root;
-                node.right.parent = node;
-                root = node;
+                Node temp = node.left;
+
+                node.left = temp.right;
+                temp.right = node;
+                node.parent = temp;
+                root = temp;
                 root.parent = null;
             }
             else
             {
-                node.parent.left = node.right;
-                node.right = node.parent;
-                node.parent = node.right.parent;
-                node.right.parent.left = node;
-                node.right.parent = node;
-                node.right.left.parent = node.right;
+                Node temp = node.left;
+
+                if (temp.right != null)
+                {
+                    node.left = temp.right;
+                    node.left.parent = node;
+                }
+                else
+                {
+                    node.left = null;
+                }
+
+                temp.right = node;
+                temp.parent = node.parent;
+
+                if (node == node.parent.right)
+                {
+                    temp.parent.right = temp;
+                }
+                else
+                {
+                    temp.parent.left = temp;
+                }
+
+                node.parent = temp;
             }
         }
 		
