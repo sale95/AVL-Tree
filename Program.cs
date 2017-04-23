@@ -11,10 +11,16 @@ namespace AVLTree
         static void Main(string[] args)
         {
             Tree avl = new Tree();
-            avl.Insert(1);
-            avl.Insert(3);
+            avl.Insert(5);
+            avl.Insert(10);
+            avl.Insert(4);
             avl.Insert(2);
-            Console.WriteLine(avl.root.data);
+            avl.Insert(9);
+            avl.Insert(12);
+            avl.Insert(15);
+            avl.Remove(avl.root, 15);
+            avl.Print(avl.root);
+            //Console.WriteLine(avl.root.data);
         }
     }
 }

@@ -66,6 +66,47 @@ namespace AVLTree
             }
         }
 
+        public void Remove(Node node, int value)
+        {
+            if(node == null)
+            {
+                return;
+            }
+
+            if(value > node.data)
+            {
+                Remove(node.right, value);
+            }
+            else if(value < node.data)
+            {
+                Remove(node.left, value);
+            }
+            else
+            {
+                Node parent = node.parent;
+
+                if(node.left == null && node.right == null)
+                {
+                    if(parent.left == node)
+                    {
+                        parent.left = null;
+                    }
+                    else
+                    {
+                        parent.right = null;
+                    }
+                }
+                else if(node.left != null && node.right != null)
+                {
+
+                }
+                else
+                {
+                    
+                }
+            }
+        }
+
         /**
          * This function prints tree inOrder.
          * */
@@ -107,6 +148,7 @@ namespace AVLTree
                 ChooseRotation(node, bf);
                 Balance(node.parent);
             }
+            //Check balance up to root.
             else
             {
                 Balance(node.parent);
@@ -118,31 +160,33 @@ namespace AVLTree
          **/
         public void ChooseRotation(Node node, int bf)
         {
+            //LeftRight Rotation
             if(bf == 2 && BalanceFactor(1 + Height(node.left.left), 1 + Height(node.left.right)) == -1)
             {
-                Console.WriteLine("node.left RotateLeft, RotateRight on {0}", node.data);
                 LeftRotation(node.left);
                 RightRotation(node);
             }
+            //RightLeft Rotation
             else if(bf == -2 && BalanceFactor(1 + Height(node.right.left), 1 + Height(node.right.right)) == 1)
             {
-                Console.WriteLine("node.right RotateRight, RotateLeft on {0}", node.data);
                 RightRotation(node.right);
                 LeftRotation(node);
             }
+            //Left Rotation
             else if(bf == -2 && BalanceFactor(1 + Height(node.right.left), 1 + Height(node.right.right)) == -1)
             {
-                Console.WriteLine("Rotate Left on {0}", node.data);
                 LeftRotation(node);
             }
+            //Right Rotation
             else if(bf == 2 && BalanceFactor(1 + Height(node.left.left), 1 + Height(node.left.right)) == 1)
             {
-                Console.WriteLine("Rotate Right on {0}", node.data);
                 RightRotation(node);
             }
         }
 
-		//Done
+		/**
+         * This function does left rotation on a node.
+         * */
         public void LeftRotation(Node node)
         {
             if(node == root)
@@ -159,6 +203,7 @@ namespace AVLTree
             {
                 Node temp = node.right;
                 
+                //If nodes right node has left node, attach that node to current node.
                 if(temp.left != null) 
                 {
                     node.right = temp.left;
@@ -172,7 +217,8 @@ namespace AVLTree
                 temp.left = node;
                 temp.parent = node.parent;
 
-                if(node == node.parent.left)
+                //If current node is left child, temp will be left child too (LR case)
+                if (node == node.parent.left)
                 {
                     temp.parent.left = temp;
                 }
@@ -185,7 +231,9 @@ namespace AVLTree
             }
         }
 		
-		//In development.
+		/**
+         * This function does right rotation on a node.
+         **/
         public void RightRotation(Node node)
         {
             if (node == root)
@@ -202,6 +250,7 @@ namespace AVLTree
             {
                 Node temp = node.left;
 
+                //If nodes left node has right node, attach it to current node.
                 if (temp.right != null)
                 {
                     node.left = temp.right;
@@ -215,6 +264,7 @@ namespace AVLTree
                 temp.right = node;
                 temp.parent = node.parent;
 
+                //If current node is right child, temp will be right child (RL case)
                 if (node == node.parent.right)
                 {
                     temp.parent.right = temp;
