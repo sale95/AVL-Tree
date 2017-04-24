@@ -95,6 +95,8 @@ namespace AVLTree
                     {
                         parent.right = null;
                     }
+
+                    Balance(parent);
                 }
                 else if(node.left != null && node.right != null)
                 {
@@ -102,7 +104,35 @@ namespace AVLTree
                 }
                 else
                 {
-                    
+                    Node tempChild;
+                    bool isRightChild = false;
+
+                    if(parent.right == node)
+                    {
+                        isRightChild = true;
+                    }
+
+                    if(node.right != null)
+                    {
+                        tempChild = node.right;
+                    }
+                    else
+                    {
+                        tempChild = node.left;
+                    }
+
+                    if(isRightChild)
+                    {
+                        parent.right = tempChild;
+                        tempChild.parent = parent;
+                    }
+                    else
+                    {
+                        parent.left = tempChild;
+                        tempChild.parent = parent;
+                    }
+
+                    Balance(parent);
                 }
             }
         }
