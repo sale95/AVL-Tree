@@ -11,6 +11,9 @@ namespace AVLTree
         public Node root = null;
         public Node current = null;
 
+        //Min of subtree.
+        public Node min;
+
         /**
          * This function inserts elemnt with BST order.
          * int value - Value that will be inserted.
@@ -66,6 +69,11 @@ namespace AVLTree
             }
         }
 
+        /**
+         * This function removes node from avl tree.
+         * param node Root node.
+         * param value Value of node that we want to remove.
+         **/
         public void Remove(Node node, int value)
         {
             if(node == null)
@@ -73,45 +81,76 @@ namespace AVLTree
                 return;
             }
 
+            //If value is bigger than current data, go right.
             if(value > node.data)
             {
                 Remove(node.right, value);
             }
+            //If value is smaller than current data, go left.
             else if(value < node.data)
             {
                 Remove(node.left, value);
             }
             else
             {
+                //Parent of node that we want to delete.
                 Node parent = node.parent;
 
+                //If node is leaf, just set his parent to null;
                 if(node.left == null && node.right == null)
                 {
+                    //If node is left child.
                     if(parent.left == node)
                     {
                         parent.left = null;
                     }
+                    //If node is right child.
                     else
                     {
                         parent.right = null;
                     }
 
+                    //Check for balance when delete is finished.
                     Balance(parent);
                 }
+                //If node has two children.
                 else if(node.left != null && node.right != null)
                 {
+                    //Find minimun node in right subtree of node.
+                    FindMin(node.right);
 
+                    //Parent of minimum node.
+                    Node minParent = min.parent;
+                    
+                    //Set deleted node value to be value of minimum.
+                    node.data = min.data;
+
+                    //If min node is left child.
+                    if(minParent.left == min)
+                    {
+                        minParent.left = null;
+                    }
+                    else
+                    {
+                        minParent.right = null;
+                    }
+
+                    //Check for balance when delete is finished.
+                    Balance(minParent);
                 }
                 else
                 {
                     Node tempChild;
+                    
                     bool isRightChild = false;
 
+                    //if node is right child, set isRight to true;
                     if(parent.right == node)
                     {
                         isRightChild = true;
                     }
 
+                    //If node's child is on the left.
                     if(node.right != null)
                     {
                         tempChild = node.right;
@@ -121,35 +160,38 @@ namespace AVLTree
                         tempChild = node.left;
                     }
 
+                    //If node is right child.
                     if(isRightChild)
                     {
                         parent.right = tempChild;
                         tempChild.parent = parent;
                     }
+                    //If node is left child.
                     else
                     {
                         parent.left = tempChild;
                         tempChild.parent = parent;
                     }
 
+                    //Check for balance after delete is finished.
                     Balance(parent);
                 }
             }
         }
 
         /**
-         * This function prints tree inOrder.
+         * This function finds minimum of a subtree.
          * */
-        public void Print(Node node)
+        public void FindMin(Node node)
         {
+           
             if (node == null)
             {
                 return;
             }
-
-            Print(node.left);
-            Console.WriteLine(node.data);
-            Print(node.right);
+            
+            min = node;
+            FindMin(node.left);
         }
 
         /**
